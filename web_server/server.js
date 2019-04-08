@@ -1,9 +1,13 @@
 var express = require('express')
 var app = express()
-
-app.use(express.static(__dirname + '/public'))
+var hbs = require('hbs');
+// indicando el servidor express que esta carpeta contiene todo el proyecto
+app.use(express.static(__dirname + '/public'));
 
 //--express HBS---
+// __dirname = indicar la ruta absoluta ..  hbs.registerPartial  =indicando el servidor express que esta carpeta contiene todo el proyecto
+hbs.registerPartials(__dirname + '/views/parciales');
+
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
