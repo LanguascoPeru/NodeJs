@@ -1,0 +1,4 @@
+configuracion de usuario de base de datos
+
+usuario : languascoPeru
+password : x5hpDSapDMypbRtX
