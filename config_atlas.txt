@@ -2,3 +2,8 @@ configuracion de usuario de base de datos
 
 usuario : languascoPeru
 password : x5hpDSapDMypbRtX
+
+
+
+
+mongodb+srv://languascoPeru:x5hpDSapDMypbRtX@cluster0-ak01y.mongodb.net/cafe

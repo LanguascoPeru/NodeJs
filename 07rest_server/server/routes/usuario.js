@@ -11,35 +11,35 @@ app.get('/usuario', function(req, res) {
 
     ///req.query = parametros opcionales del get
 
-    let desde  = req.query.desde || 0;
-    let hasta  = req.query.hasta || 5;
+    let desde = req.query.desde || 0;
+    let hasta = req.query.hasta || 5;
 
     desde = Number(desde);
     hasta = Number(hasta)
 
- 
 
-      ///----count({}) las llaves es donde ira el filtro del select
-    Usuario.find({estado: 'false'},'nombre email role estado google img')
-           .skip(desde)
-           .limit(hasta)
-           .exec((err, data_user)=>{
-                if (err) {
-                    res.status(400).json({
-                        ok:false,
-                        mensaje:err
-                    });
-                }else{
-                    ///----count({}) las llaves es donde ira el filtro
-                    Usuario.count({estado: 'false'},(err, conteo)=>{
-                        res.json({
-                            ok:true,
-                            usuarios : data_user,
-                            cantidad_reg :conteo
-                        })
+
+    ///----count({}) las llaves es donde ira el filtro del select  ,, los campoos a mostrar 'nombre email role estado google img'
+    Usuario.find({ estado: 'false' }, 'nombre email role estado google img')
+        .skip(desde)
+        .limit(hasta)
+        .exec((err, data_user) => {
+            if (err) {
+                res.status(400).json({
+                    ok: false,
+                    mensaje: err
+                });
+            } else {
+                ///----count({}) las llaves es donde ira el filtro
+                Usuario.count({ estado: 'false' }, (err, conteo) => {
+                    res.json({
+                        ok: true,
+                        usuarios: data_user,
+                        cantidad_reg: conteo
                     })
-                }
-           })
+                })
+            }
+        })
 })
 
 app.post('/usuario', function(req, res) {
@@ -48,7 +48,7 @@ app.post('/usuario', function(req, res) {
     let user = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: bcrypt.hashSync(body.password,10) , 
+        password: bcrypt.hashSync(body.password, 10),
         role: body.role
     })
 
@@ -60,7 +60,7 @@ app.post('/usuario', function(req, res) {
                 mensaje: err
             })
         } else {
-            data.password =null;
+            data.password = null;
             res.json({
                 ok: true,
                 usuario: data
@@ -73,27 +73,27 @@ app.put('/usuario/:id_usuario', function(req, res) {
     let cod_user = req.params.id_usuario;
 
     /// _pick = sirve para seleccionar solo aquellos campos que se desean actualizar....
-    let body = _.pick(req.body,[ 'nombre' ,'email', 'role', 'estado' ]);
+    let body = _.pick(req.body, ['nombre', 'email', 'role', 'estado']);
 
     //-----Escluyendo campos al actualizar...
     ////----delete body.email;
-     
+
 
     ///-- findByIdAndUpdate {new:true}, para que devuelva las entidades actualizadas, {runValidators :true} sirve para que al actualizar respete validaciones del Grabar
-    Usuario.findByIdAndUpdate(cod_user,body,{new:true, runValidators :true}, (err, data)=>{
+    Usuario.findByIdAndUpdate(cod_user, body, { new: true, runValidators: true }, (err, data) => {
         if (err) {
             res.status(400).json({
-                ok:false,
-                mensaje:err
+                ok: false,
+                mensaje: err
             });
-        }else{
+        } else {
             res.json({
-                ok:true,
-                usuario:data
+                ok: true,
+                usuario: data
             });
         }
     });
- 
+
 
 
 
@@ -127,28 +127,26 @@ app.delete('/usuario/:id_user', function(req, res) {
     })
     */
 
- 
-    let cambiandoEstado ={
-        estado : false
+
+    let cambiandoEstado = {
+        estado: false
     }
 
-   Usuario.findByIdAndUpdate(id,cambiandoEstado ,(err, usuario_actualizado)=>{
+    Usuario.findByIdAndUpdate(id, cambiandoEstado, (err, usuario_actualizado) => {
         if (err) {
             res.status(400).json({
-                ok:false,
-                mensaje:err
+                ok: false,
+                mensaje: err
             })
-        }else{
-            let usuarioActualizado  = _.pick(usuario_actualizado,['nombre']);
+        } else {
+            let usuarioActualizado = _.pick(usuario_actualizado, ['nombre']);
             res.json({
-                ok:true,
+                ok: true,
                 usuario: usuarioActualizado
             })
         }
-   })
+    })
 })
 
 //--- module.exports sirve para enviar funciones o variables a otro archivo
 module.exports = app;
-
- 
