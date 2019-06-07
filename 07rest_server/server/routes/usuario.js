@@ -8,19 +8,16 @@ const Usuario = require('../model/usuario.js')
 const app = express();
 ///---find ,limit,exec  =   metodos del mongoose
 app.get('/usuario', function(req, res) {
-
     ///req.query = parametros opcionales del get
 
     let desde = req.query.desde || 0;
     let hasta = req.query.hasta || 5;
 
     desde = Number(desde);
-    hasta = Number(hasta)
-
-
+    hasta = Number(hasta);
 
     ///----count({}) las llaves es donde ira el filtro del select  ,, los campoos a mostrar 'nombre email role estado google img'
-    Usuario.find({ estado: 'false' }, 'nombre email role estado google img')
+    Usuario.find({ estado: 'true' }, 'nombre email role estado google img')
         .skip(desde)
         .limit(hasta)
         .exec((err, data_user) => {
@@ -31,7 +28,7 @@ app.get('/usuario', function(req, res) {
                 });
             } else {
                 ///----count({}) las llaves es donde ira el filtro
-                Usuario.count({ estado: 'false' }, (err, conteo) => {
+                Usuario.count({ estado: 'true' }, (err, conteo) => {
                     res.json({
                         ok: true,
                         usuarios: data_user,

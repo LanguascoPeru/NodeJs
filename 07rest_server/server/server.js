@@ -14,7 +14,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // creando un midleware propio jalando datos de un archivo controlador
-app.use(require('./routes/usuario.js'));
+///--- configuracion global de rutas
+app.use(require('./routes/index.js'));
 
 
 ///--realizando la conexion a la base de datos mongodb ,         process.env.URL_BD = es una variable Global que contiene la conexion
