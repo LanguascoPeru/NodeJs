@@ -10,6 +10,16 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 ////---- Fin de Entorno --- ///////
 
 
+////---- Vencimiento de token --- ///////
+process.env.CADUCIDAD_TOKEN =60 * 60 * 24 * 30;
+////---- Fin de Vencimiento de token --- ///////
+
+////---- Autenticacion --- ///////
+process.env.SEED = 'este-es-el-sed-desarrollo';
+
+////---- Fin Autenticacion--- ///////
+
+
 ////---- Base de datos --- ///////
 let urlBD;
 

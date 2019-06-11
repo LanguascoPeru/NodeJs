@@ -34,10 +34,11 @@ app.post('/login', function(req, res) {
                     //----- pick sierve para definir aquellos campos que queremos devolver;
                     //let data_user_encontro = _.pick(data_usuario, ['nombre']);
 
-                    /// funcion encargada de generar el codigo token  
+                    /// funcion encargada de generar el codigo token  se compone de 3 campos ..
                     let token_Porservidor = jwt.sign({
-                        usuario: data_usuario
-                    }, 'este-es-el-sed-desarrollo', { expiresIn: 60 * 60 });
+                        usuario: data_usuario 
+                    }, process.env.SEED, 
+                    { expiresIn: process.env.CADUCIDAD_TOKEN});
 
 
                     res.json({
