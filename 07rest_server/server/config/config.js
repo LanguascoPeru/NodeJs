@@ -33,3 +33,6 @@ if (process.env.NODE_ENV === 'dev') {
 process.env.URL_BD = urlBD;
 
 ////---- Base de datos--- ///////
+
+////---- Cliente ID google signin --- ///////
+process.env.CLIENT_ID = '887310093942-6cdepf7vc8rasolc432g6o4igenmkd0k.apps.googleusercontent.com';

@@ -17,7 +17,6 @@ app.get('/usuario', aut.verifica_token,  function(req, res) {
     let hasta = req.query.hasta || 5;
 
  
-
     desde = Number(desde);
     hasta = Number(hasta);
 
@@ -149,6 +148,8 @@ app.delete('/usuario/:id_user',[aut.verifica_token , rol.verifica_Admin_Role], f
         }
     })
 })
+
+
 
 //--- module.exports sirve para enviar funciones o variables a otro archivo
 module.exports = app;

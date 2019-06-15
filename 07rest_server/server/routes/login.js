@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const jwt = require('jsonwebtoken');
 
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client('887310093942-6cdepf7vc8rasolc432g6o4igenmkd0k.apps.googleusercontent.com');
+
 /// objeto que contiene la informacion del model de la bd
 const Usuario = require('../model/usuario.js')
 
@@ -14,7 +17,7 @@ app.post('/login', function(req, res) {
 
     Usuario.findOne({ email: body.email }, (err, data_usuario) => {
         if (err) {
-            res.status(400).json({
+            res.status(500).json({
                 ok: false,
                 message: err
             });
@@ -61,5 +64,99 @@ app.post('/login', function(req, res) {
 
 })
 
+ //---- function de verifficacion de google sign in
+ let verify = async(token) => {
+  const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: '887310093942-6cdepf7vc8rasolc432g6o4igenmkd0k.apps.googleusercontent.com', 
+  });
+  const payload = ticket.getPayload();
+  return {
+    nombre : payload.name,
+    email : payload.email,
+    img : payload.picture,
+    google: true
+  }
+}
+
+
+app.post('/google', async (req, res) =>{   
+    //-- verifica si el token de Google es correcto 
+    let googleuser = await verify(req.body.idtoken)
+                           .catch((e)=>{
+                             return res.status(403).json({
+                                 ok:false,
+                                 error:e
+                             })
+                           }); 
+
+    ///--- verificamos en la bd si existe el usuario    
+    Usuario.findOne({email : googleuser.email },(err, usuarioBD)=>{
+        if (err) {
+            res.status(500).json({
+                ok: false,
+                message: err
+            })
+        }else{
+            ///----- existe en la base de datos
+            if (usuarioBD) {    
+                //-----es de tipo google maps   ,          
+                if (usuarioBD.google === false) {
+                    //--- por que se creo de forma normal
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'Debe de usar su autentificacion normal'
+                    })                    
+                }else{  ///solo renovar el tokken
+
+                        let token_Porservidor = jwt.sign({
+                            usuario: usuarioBD 
+                        }, process.env.SEED, 
+                        { expiresIn: process.env.CADUCIDAD_TOKEN});
+
+                        res.json({
+                            ok: true,
+                            message: usuarioBD,
+                            token: token_Porservidor,
+                            googleSign:true
+                        })
+    
+                }                
+            }else{ //---No existe ----- agregando  nuevo usuario 
+
+                let user = new Usuario({
+                    nombre: googleuser.nombre,
+                    email: googleuser.email,
+                    password: ':)',
+                    img: googleuser.picture,
+                    google : true
+                })
+                user.save((err, usuarioBD)=>{
+                    if (err) {
+                        res.status(400).json({
+                            ok: false,
+                            mensaje: err
+                        })
+                    } else {
+                        //---- generamos un token
+                        let token_Porservidor = jwt.sign({
+                            usuario: usuarioBD 
+                        }, process.env.SEED, 
+                        { expiresIn: process.env.CADUCIDAD_TOKEN});
+    
+                        res.json({
+                            ok: true,
+                            message: usuarioBD,
+                            token: token_Porservidor
+                        })
+                    }
+                })                
+            }
+                
+        }
+    })
+
+})
 
 module.exports = app;
+ 
