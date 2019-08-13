@@ -1,24 +1,24 @@
-const {io} = require('../server')
+const { io } = require('../server')
 io.on('connection', (client) => {
     console.log('usuario conectado');
 
-     //----emit enviar mensaje al cliente --> {se envia un objeto} 
+    //----emit enviar mensaje al cliente --> {se envia un objeto} 
     client.emit('enviarMensaje', {
-      usuario:'Administrador',
-      mensaje:'Bienvenido a la aplicación'
+        usuario: 'Administrador',
+        mensaje: 'Bienvenido a la aplicación'
     });
-    
+
     //----on escuchar sucesos---
-    client.on('disconnect',()=>{
+    client.on('disconnect', () => {
         console.log('usuario desconectado');
     })
 
     //----on escuchar sucesos del cliente--> se recibe una function
-    client.on('enviarMensaje',(data,callback)=>{
+    client.on('enviarMensaje', (data, callback) => {
         console.log(data);
-        
+
         //---devuelve el mensaje a todo el mundo conectado a nuestra aplicacion....
-        client.broadcast.emit('enviarMensaje',data);
+        client.broadcast.emit('enviarMensaje', data);
 
         /*
         if (mensaje.usuario){
@@ -30,6 +30,6 @@ io.on('connection', (client) => {
                 resp: 'TODO SALIO MALLL..'
             });
         }  
-        */     
+        */
     })
 })
