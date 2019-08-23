@@ -33,9 +33,3 @@ io.on('connection', (client) => {
 
 
 });
-
-
-
-
-
-//-----  oaaa virtual disco oaaaaa virtual disko once a ver ponle solo onve once tampooco tampoco oass
